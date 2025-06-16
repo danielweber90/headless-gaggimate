@@ -34,6 +34,9 @@ void WebUIPlugin::setup(Controller *_controller, PluginManager *_pluginManager) 
         ota->init(controller->getClientController()->getClient());
     });
     pluginManager->on("controller:autotune:result", [this](Event const &event) { sendAutotuneResult(); });
+    pluginManager->on("boiler:pressure:change", [=](Event const &event) {
+        pressure = event.getFloat("value");
+    });
 }
 
 void WebUIPlugin::loop() {
@@ -56,6 +59,7 @@ void WebUIPlugin::loop() {
         doc["tp"] = "evt:status";
         doc["ct"] = controller->getCurrentTemp();
         doc["tt"] = controller->getTargetTemp();
+        doc["pr"] = this->pressure;
         doc["m"] = controller->getMode();
         doc["p"] = controller->getProfileManager()->getSelectedProfile().label;
         doc["cp"] = controller->getSystemInfo().capabilities.pressure;
