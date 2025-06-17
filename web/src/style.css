@@ -8,13 +8,31 @@
   @apply text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-4 focus:ring-gray-200 rounded-full px-5 py-3 mr-2 gap-3 items-center text-center;
 }
 
-.menu-button:not(:disabled) {
+.action-button {
+  @apply bg-gray-50 border border-[#ccc] dark:border-gray-600 border-opacity-40 dark:bg-gray-800;
+  @apply text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-4 focus:ring-gray-200 rounded-full px-3 py-3 gap-1 items-center text-center;
+}
+
+.menu-button:not(:disabled), .action-button:not(:disabled) {
     cursor: pointer;
     @apply hover:bg-gray-200 dark:hover:bg-gray-700;
 }
 
-.menu-button:disabled {
+.menu-button:disabled, .action-button:disabled {
     @apply bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300;
+}
+
+.menu-button.loading i, .action-button.loading i{
+  animation: 1000ms infinite color-change;
+}
+
+@keyframes color-change {
+  0% {
+    @apply text-gray-400
+  }
+  100% {
+    @apply text-green-400
+  }
 }
 
 .menu-button-sm {
