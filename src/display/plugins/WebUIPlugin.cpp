@@ -96,15 +96,7 @@ void WebUIPlugin::start(bool apMode) {
         server.on("/ncsi.txt", [](AsyncWebServerRequest *request) { request->redirect(LOCAL_URL); }); // windows call home
     }
     server.on("/api/settings", [this](AsyncWebServerRequest *request) { handleSettings(request); });
-    server.on("/api/status", [this](AsyncWebServerRequest *request) {
-        AsyncResponseStream *response = request->beginResponseStream("application/json");
-        JsonDocument doc;
-        doc["mode"] = controller->getMode();
-        doc["tt"] = controller->getTargetTemp();
-        doc["ct"] = controller->getCurrentTemp();
-        serializeJson(doc, *response);
-        request->send(response);
-    });
+    server.on("/api/status", [this](AsyncWebServerRequest *request) { handleStatus(request); });
     server.on("/api/scales/list", [this](AsyncWebServerRequest *request) { handleBLEScaleList(request); });
     server.on("/api/scales/connect", [this](AsyncWebServerRequest *request) { handleBLEScaleConnect(request); });
     server.on("/api/scales/scan", [this](AsyncWebServerRequest *request) { handleBLEScaleScan(request); });
@@ -233,6 +225,22 @@ void WebUIPlugin::handleProfileRequest(uint32_t clientId, JsonDocument &request)
     String msg;
     serializeJson(response, msg);
     ws.text(clientId, msg);
+}
+
+void WebUIPlugin::handleStatus(AsyncWebServerRequest *request) const {
+    if (request->method() == HTTP_POST) {
+        printf("Received Status update\n");
+        if (request->hasArg("mode"))
+            controller->setMode(request->arg("mode").toInt());
+    }
+    AsyncResponseStream *response = request->beginResponseStream("application/json");
+    JsonDocument doc;
+    doc["mode"] = controller->getMode();
+    doc["tt"] = controller->getTargetTemp();
+    doc["ct"] = controller->getCurrentTemp();
+    doc["active"] = controller->isActive();
+    serializeJson(doc, *response);
+    request->send(response);
 }
 
 void WebUIPlugin::handleSettings(AsyncWebServerRequest *request) const {

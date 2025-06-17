@@ -37,6 +37,7 @@ class WebUIPlugin : public Plugin {
     void handleProfileRequest(uint32_t clientId, JsonDocument &request);
 
     // HTTP handlers
+    void handleStatus(AsyncWebServerRequest *request) const;
     void handleSettings(AsyncWebServerRequest *request) const;
     void handleBLEScaleList(AsyncWebServerRequest *request);
     void handleBLEScaleScan(AsyncWebServerRequest *request);
