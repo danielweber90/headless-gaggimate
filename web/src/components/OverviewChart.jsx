@@ -16,16 +16,26 @@ function getChartData(data) {
           label: 'Current Temperature',
           borderColor: '#F44336',
           pointStyle: false,
-          data: data.map((i, idx) => ({x: i.timestamp.toISOString(), y: i.currentTemperature}))
+          data: data.map((i, idx) => ({ x: i.timestamp.toISOString(), y: i.currentTemperature })),
+          yAxisID: 'y',
         },
         {
           label: 'Target Temperature',
           fill: true,
           borderColor: '#03A9F4',
           pointStyle: false,
-          data: data.map(((i, idx) => ({x: i.timestamp.toISOString(), y: i.targetTemperature})))
-        }
-      ]
+          data: data.map((i, idx) => ({ x: i.timestamp.toISOString(), y: i.targetTemperature })),
+          yAxisID: 'y',
+        },
+        {
+          label: 'Pressure',
+          fill: true,
+          borderColor: '#078948',
+          pointStyle: false,
+          data: data.map((i, idx) => ({ x: i.timestamp.toISOString(), y: i.pressure })),
+          yAxisID: 'y1',
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -36,8 +46,8 @@ function getChartData(data) {
         },
         title: {
           display: true,
-          text: 'Temperature History'
-        }
+          text: 'Temperature History',
+        },
       },
       animation: false,
       scales: {
@@ -46,8 +56,23 @@ function getChartData(data) {
           min: 0,
           max: 160,
           ticks: {
-            callback: value => { return `${value} °C` }
-          }
+            callback: (value) => {
+              return `${value} °C`;
+            },
+          },
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          min: 0,
+          max: 16,
+          position: 'right',
+
+          ticks: {
+            callback: (value) => {
+              return `${value} Bar`;
+            },
+          },
         },
         x: {
           type: 'time',
@@ -56,14 +81,14 @@ function getChartData(data) {
           time: {
             unit: 'second',
             displayFormats: {
-              second: 'HH:mm:ss'
-            }
+              second: 'HH:mm:ss',
+            },
           },
           ticks: {
-            source: 'auto'
-          }
-        }
-      }
+            source: 'auto',
+          },
+        },
+      },
     },
   };
 }
@@ -83,7 +108,5 @@ export function OverviewChart() {
     chart.update();
   }, [machine.value.history, chart]);
 
-  return (
-    <canvas className="w-full" ref={ref} />
-  );
+  return <canvas className="w-full" ref={ref} />;
 }

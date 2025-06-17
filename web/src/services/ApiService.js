@@ -88,6 +88,7 @@ export default class ApiService {
 
   _onStatus(message) {
     const newStatus = {
+      pressure: message.pr,
       currentTemperature: message.ct,
       targetTemperature: message.tt,
       mode: message.m,
@@ -121,6 +122,7 @@ export const ApiServiceContext = createContext(null);
 export const machine = signal({
   connected: false,
   status: {
+    pressure: 0,
     currentTemperature: 0,
     targetTemperature: 0,
     mode: 0,

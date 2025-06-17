@@ -59,6 +59,7 @@ class WebUIPlugin : public Plugin {
     long lastCleanup = 0;
     long lastDns = 0;
     bool updating = false;
+    float pressure = 0.0f;
     String updateComponent = "";
 };
 
