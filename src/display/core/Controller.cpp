@@ -568,6 +568,13 @@ void Controller::handleBrewButton(int brewButtonStatus) {
             activate();
             break;
         default:
+            if (isActive()) {
+                deactivate();
+                clear();
+            } else {
+                clear();
+            }
+            setMode(MODE_BREW);
             break;
         }
     } else if (!settings.isMomentaryButtons()) {
