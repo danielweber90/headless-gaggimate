@@ -36,12 +36,12 @@ jobs:
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
       - name: Add version
+        continue-on-error: true
         run: |
           mkdir -p out
           git tag -d nightly
           git describe --tags --dirty > out/version.txt
       - name: Build Web
-        if: always()
         run: ./scripts/build_spiffs.sh
       - name: Build controller
         run: pio run -e controller
