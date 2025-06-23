@@ -428,10 +428,9 @@ void WebUIPlugin::handleBrewStart(){
     JsonDocument doc;
     doc["tp"] = "evt:brew-start";
     doc["ts"] = millis();
-    auto obj = request["profile"].as<JsonObject>();
-    Profile profile = this->profileManage->getSelectedProfile();
-    parseProfile(obj, profile);
-    doc["profile"] = obj;
+    auto obj = doc["profile"].to<JsonObject>();
+    Profile profile = this->profileManager->getSelectedProfile();
+    writeProfile(obj, profile);
     String message = doc.as<String>();
     ws.textAll(message);
 }
@@ -440,10 +439,9 @@ void WebUIPlugin::handleBrewEnd(){
     JsonDocument doc;
     doc["tp"] = "evt:brew-end";
     doc["ts"] = millis();
-    auto obj = request["profile"].as<JsonObject>();
-    Profile profile = this->profileManage->getSelectedProfile();
-    parseProfile(obj, profile);
-    doc["profile"] = obj;
+    auto obj = doc["profile"].to<JsonObject>();
+    Profile profile = this->profileManager->getSelectedProfile();
+    writeProfile(obj, profile);
     String message = doc.as<String>();
     ws.textAll(message);
 }
