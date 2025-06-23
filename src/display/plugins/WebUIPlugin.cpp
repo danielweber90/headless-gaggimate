@@ -37,6 +37,8 @@ void WebUIPlugin::setup(Controller *_controller, PluginManager *_pluginManager) 
     pluginManager->on("boiler:pressure:change", [=](Event const &event) {
         pressure = event.getFloat("value");
     });
+    pluginManager->on("controller:brew:start", [this](Event const &event) { handleBrewStart(); });
+    pluginManager->on("controller:brew:end", [this](Event const &event) { handleBrewEnd(); });
 }
 
 void WebUIPlugin::loop() {
@@ -418,6 +420,30 @@ void WebUIPlugin::sendAutotuneResult() {
     JsonDocument doc;
     doc["tp"] = "evt:autotune-result";
     doc["pid"] = controller->getSettings().getPid();
+    String message = doc.as<String>();
+    ws.textAll(message);
+}
+
+void WebUIPlugin::handleBrewStart(){
+    JsonDocument doc;
+    doc["tp"] = "evt:brew-start";
+    doc["ts"] = millis();
+    auto obj = request["profile"].as<JsonObject>();
+    Profile profile = this->profileManage->getSelectedProfile();
+    parseProfile(obj, profile);
+    doc["profile"] = obj;
+    String message = doc.as<String>();
+    ws.textAll(message);
+}
+
+void WebUIPlugin::handleBrewEnd(){
+    JsonDocument doc;
+    doc["tp"] = "evt:brew-end";
+    doc["ts"] = millis();
+    auto obj = request["profile"].as<JsonObject>();
+    Profile profile = this->profileManage->getSelectedProfile();
+    parseProfile(obj, profile);
+    doc["profile"] = obj;
     String message = doc.as<String>();
     ws.textAll(message);
 }
