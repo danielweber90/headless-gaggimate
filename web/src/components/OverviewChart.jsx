@@ -14,26 +14,40 @@ function getChartData(data) {
       datasets: [
         {
           label: 'Current Temperature',
-          borderColor: '#F44336',
+          borderColor: '#F0561D',
           pointStyle: false,
           data: data.map((i, idx) => ({ x: i.timestamp.toISOString(), y: i.currentTemperature })),
-          yAxisID: 'y',
         },
         {
           label: 'Target Temperature',
           fill: true,
-          borderColor: '#03A9F4',
+          borderColor: '#731F00',
+          borderDash: [6, 6],
           pointStyle: false,
           data: data.map((i, idx) => ({ x: i.timestamp.toISOString(), y: i.targetTemperature })),
-          yAxisID: 'y',
         },
         {
-          label: 'Pressure',
-          fill: true,
-          borderColor: '#078948',
+          label: 'Current Pressure',
+          borderColor: '#0066CC',
           pointStyle: false,
-          data: data.map((i, idx) => ({ x: i.timestamp.toISOString(), y: i.pressure })),
           yAxisID: 'y1',
+          data: data.map((i, idx) => ({ x: i.timestamp.toISOString(), y: i.currentPressure })),
+        },
+        {
+          label: 'Target Pressure',
+          fill: true,
+          borderColor: '#003366',
+          borderDash: [6, 6],
+          pointStyle: false,
+          yAxisID: 'y1',
+          data: data.map((i, idx) => ({ x: i.timestamp.toISOString(), y: i.targetPressure })),
+        },
+        {
+          label: 'Current Flow',
+          borderColor: '#63993D',
+          pointStyle: false,
+          yAxisID: 'y1',
+          data: data.map((i, idx) => ({ x: i.timestamp.toISOString(), y: i.currentFlow })),
         },
       ],
     },
@@ -63,14 +77,12 @@ function getChartData(data) {
         },
         y1: {
           type: 'linear',
-          display: true,
           min: 0,
           max: 16,
           position: 'right',
-
           ticks: {
             callback: (value) => {
-              return `${value} Bar`;
+              return `${value} bar / g/s`;
             },
           },
         },

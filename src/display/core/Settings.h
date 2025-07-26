@@ -62,6 +62,13 @@ class Settings {
     String getSelectedProfile() const { return selectedProfile; }
     bool isProfilesMigrated() const { return profilesMigrated; }
     std::vector<String> getFavoritedProfiles() const { return favoritedProfiles; }
+    int getMainBrightness() const { return mainBrightness; }
+    int getStandbyBrightness() const { return standbyBrightness; }
+    int getStandbyBrightnessTimeout() const { return standbyBrightnessTimeout; }
+    int getWifiApTimeout() const { return wifiApTimeout; }
+    float getSteamPumpPercentage() const { return steamPumpPercentage; }
+    int getThemeMode() const { return themeMode; }
+    int getHistoryIndex() const { return historyIndex; }
     void setTargetBrewTemp(int target_brew_temp);
     void setTargetSteamTemp(int target_steam_temp);
     void setTargetWaterTemp(int target_water_temp);
@@ -106,6 +113,13 @@ class Settings {
     void setFavoritedProfiles(std::vector<String> favorited_profiles);
     void addFavoritedProfile(String profile);
     void removeFavoritedProfile(String profile);
+    void setMainBrightness(int main_brightness);
+    void setStandbyBrightness(int standby_brightness);
+    void setStandbyBrightnessTimeout(int standby_brightness_timeout);
+    void setWifiApTimeout(int timeout);
+    void setSteamPumpPercentage(float steam_pump_percentage);
+    void setThemeMode(int theme_mode);
+    void setHistoryIndex(int history_index);
 
   private:
     Preferences preferences;
@@ -148,6 +162,8 @@ class Settings {
     bool clock24hFormat = true;
     String otaChannel = DEFAULT_OTA_CHANNEL;
     std::vector<String> favoritedProfiles;
+    float steamPumpPercentage = DEFAULT_STEAM_PUMP_PERCENTAGE;
+    int historyIndex = 0;
 
     // Deprecated, use profiles
     int targetBrewTemp = 93;
@@ -156,6 +172,13 @@ class Settings {
     int infuseBloomTime = 0;
     int infusePumpTime = 0;
     int pressurizeTime = 0;
+
+    // Display settings
+    int mainBrightness = 16;
+    int standbyBrightness = 8;
+    int standbyBrightnessTimeout = 60000; // 60 seconds default
+    int wifiApTimeout = DEFAULT_WIFI_AP_TIMEOUT_MS;
+    int themeMode = 0;
 
     void doSave();
     xTaskHandle taskHandle;

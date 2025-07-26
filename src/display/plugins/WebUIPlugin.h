@@ -7,13 +7,15 @@
 
 #include "../core/Plugin.h"
 #include "GitHubOTA.h"
+#include "ShotHistoryPlugin.h"
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
 #include <ESPAsyncWebServer.h>
+#include <vector>
 
 constexpr size_t UPDATE_CHECK_INTERVAL = 5 * 60 * 1000;
-constexpr size_t CLEANUP_PERIOD = 30 * 1000;
-constexpr size_t STATUS_PERIOD = 1000;
+constexpr size_t CLEANUP_PERIOD = 5 * 1000;
+constexpr size_t STATUS_PERIOD = 500;
 constexpr size_t DNS_PERIOD = 10;
 
 const String LOCAL_URL = "http://4.4.4.1/";
@@ -28,7 +30,9 @@ class WebUIPlugin : public Plugin {
     void loop() override;
 
   private:
-    void start(bool apMode);
+    void setupServer();
+    void start();
+    void stop();
 
     // Websocket handlers
     void handleOTASettings(uint32_t clientId, JsonDocument &request);
@@ -60,7 +64,8 @@ class WebUIPlugin : public Plugin {
     long lastCleanup = 0;
     long lastDns = 0;
     bool updating = false;
-    float pressure = 0.0f;
+    bool apMode = false;
+    bool serverRunning = false;
     String updateComponent = "";
 };
 

@@ -1,15 +1,15 @@
 #ifndef HEATER_H
 #define HEATER_H
-#include "Autotune.h"
+#include "Autotune/Autotune.h"
 #include "Max31855Thermocouple.h"
-#include "SimplePID.h"
 #include "TemperatureSensor.h"
+#include <SimplePID/SimplePID.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
 enum class PIDLibrary { Legacy, Nimrod };
 
-constexpr float TUNER_INPUT_SPAN = 160.0f;
+constexpr float MAX_AUTOTUNE_TEMP = 125.0f;
 constexpr float TUNER_OUTPUT_SPAN = 1000.0f;
 
 using heater_error_callback_t = std::function<void()>;

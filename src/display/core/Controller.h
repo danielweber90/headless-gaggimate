@@ -13,6 +13,8 @@
 const IPAddress WIFI_AP_IP(4, 4, 4, 1); // the IP address the web server, Samsung requires the IP to be in public space
 const IPAddress WIFI_SUBNET_MASK(255, 255, 255, 0); // no need to change: https://avinetworks.com/glossary/subnet-mask/
 
+enum class VolumetricMeasurementSource { FLOW_ESTIMATION, BLUETOOTH };
+
 class Controller {
   public:
     Controller() = default;
@@ -40,7 +42,12 @@ class Controller {
     bool isUpdating() const;
     bool isAutotuning() const;
     bool isReady() const;
-    bool isVolumetricAvailable() const { return volumetricAvailable; }
+    bool isVolumetricAvailable() const;
+    virtual float getTargetPressure() const { return targetPressure; }
+    virtual float getTargetFlow() const { return targetFlow; }
+    virtual float getCurrentPressure() const { return pressure; }
+    virtual float getCurrentPuckFlow() const { return currentPuckFlow; }
+    virtual float getCurrentPumpFlow() const { return currentPumpFlow; }
 
     void autotune(int testTime, int samples);
     void startProcess(Process *process);
@@ -70,8 +77,8 @@ class Controller {
     void onOTAUpdate();
     void onScreenReady();
     void onTargetChange(ProcessTarget target);
-    void onVolumetricMeasurement(double measurement) const;
-    void setVolumetricAvailable(bool available) { volumetricAvailable = available; }
+    void onVolumetricMeasurement(double measurement, VolumetricMeasurementSource source);
+    void setVolumetricOverride(bool override) { volumetricOverride = override; }
     void onFlush();
 
     SystemInfo getSystemInfo() const { return systemInfo; }
@@ -81,9 +88,9 @@ class Controller {
   private:
     // Initialization methods
     void setupPanel();
-    void setupWifi();
     void setupBluetooth();
     void setupInfos();
+    void setupWifi();
 
     // Functional methods
     void updateControl();
@@ -109,6 +116,10 @@ class Controller {
     int mode = MODE_BREW;
     int currentTemp = 0;
     float pressure = 0.0f;
+    float targetPressure = 0.0f;
+    float currentPuckFlow = 0.0f;
+    float currentPumpFlow = 0.0f;
+    float targetFlow = 0.0f;
 
     SystemInfo systemInfo{};
 
@@ -125,11 +136,13 @@ class Controller {
     bool isApConnection = false;
     bool initialized = false;
     bool screenReady = false;
-    bool volumetricAvailable = false;
+    bool volumetricOverride = false;
     bool processCompleted = false;
+    bool steamReady = false;
     int error = 0;
 
     xTaskHandle taskHandle;
+
     static void loopTask(void *arg);
 };
 
